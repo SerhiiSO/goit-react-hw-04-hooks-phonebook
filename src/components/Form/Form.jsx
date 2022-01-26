@@ -1,22 +1,28 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
-
-const initialValues = {
+import { FormStyled, LabelStyled, FieldStyled, SubmitBtnStyled } from './Form.styled';
+const state = {
   name: '',
-  phone: '',
+  number: '',
 };
 const contactOpt = yup.object().shape({
-  name: yup.string().required("Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"),
-  phone: yup.string().required(
-      "Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+  name: yup
+    .string()
+    .required(
+      "Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+    ),
+  number: yup
+    .string()
+    .required(
+      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
     ),
 });
 const FormError = ({ name }) => {
   return <ErrorMessage name={name} render={message => <p>{message}</p>} />;
 };
 export class ContactsForm extends Component {
-
   handleChange = event => {
     const { name, value } = event.currentTarget;
     this.setState({ [name]: value });
@@ -24,41 +30,48 @@ export class ContactsForm extends Component {
 
   handleSubmit = (values, { resetForm }) => {
     console.log(values);
+    this.props.onSubmit(values);
     resetForm();
   };
   render() {
     return (
+      <FormStyled>
       <Formik
-        initialValues={initialValues}
+        initialValues={state}
         validationSchema={contactOpt}
         onSubmit={this.handleSubmit}
+        
       >
         <Form autoComplete="off">
-          <div>
-            <label htmlFor="name">contact name</label>
+          <FieldStyled>
+            <LabelStyled htmlFor="name">contact name</LabelStyled>
             <Field
               name="name"
               type="text"
               pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
               placeholder="Fill contact name"
-              
             />
             <FormError name="name" />
-          </div>
-          <div>
-            <label htmlFor="phone">contact phone</label>
+          </FieldStyled>
+          <FieldStyled>
+            <LabelStyled htmlFor="number">contact number</LabelStyled>
             <Field
-              name="phone"
+              name="number"
               type="tel"
               pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              placeholder="Fill contact phone"
-              
+              placeholder="Fill contact number"
             />
-            <FormError name="phone" />
-          </div>
-          <button type="submit">Add contact</button>
+            <FormError name="number" />
+          </FieldStyled>
+          <SubmitBtnStyled type="submit">Add contact</SubmitBtnStyled>
         </Form>
       </Formik>
+      </FormStyled>
+      
     );
   }
 }
+
+ContactsForm.propTypes = {
+  onSubmit: PropTypes.func,
+};

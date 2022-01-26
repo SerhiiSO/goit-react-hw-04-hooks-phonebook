@@ -1,25 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { DivStyled,ListStyled,ItemStyled,DataStyled,DeleteStyled } from './ContactList.styled';
 export default function ContactsList(props) {
-
-  
-
   const { contacts, deleteContacts } = props;
   return (
-    <ul>
+    <DivStyled>
+    <ListStyled>
       {contacts.map(contact => (
-        <li key={contact.id}>
-          <span>{contact.name}</span>
-          <span>{contact.phone}</span>
-          <button onClick={() => deleteContacts(contact.id)}>Delete</button>
-        </li>
+        <ItemStyled key={contact.id}>
+          <DataStyled>{contact.name}</DataStyled>
+          <DataStyled>{contact.number}</DataStyled>
+          <DeleteStyled onClick={() => deleteContacts(contact.id)}>Delete</DeleteStyled>
+        </ItemStyled>
       ))}
-    </ul>
+    </ListStyled></DivStyled>
   );
 }
 
 ContactsList.propTypes = {
-    contacts: PropTypes.array.isRequired,
-    deleteContacts: PropTypes.func.isRequired,
-  };
+  contacts: PropTypes.array.isRequired,
+  deleteContacts: PropTypes.func.isRequired,
+};

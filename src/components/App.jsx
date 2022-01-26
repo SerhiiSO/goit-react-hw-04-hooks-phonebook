@@ -1,31 +1,32 @@
 import React, { Component } from 'react';
-import {nanoid} from 'nanoid';
-import {ContactsForm} from "./Form/Form";
+import { nanoid } from 'nanoid';
+
+import { ContactsForm } from './Form/Form';
 import ContactSearcher from './ContactSearcher/ContactSearcher';
-import ContactsList from "./ContactList/ContactList";
+import ContactsList from './ContactList/ContactList';
 
-
-
+import GlobalStyle from './GlobalStyles/GlobalStyles';
+import {AppContainer, InputTitle} from './App.styled'
+import { FormStyled } from './Form/Form.styled';
 export default class App extends Component {
   state = {
     contacts: [
-      { id: 'id-1', name: 'Serhii Semenov', phone: '111-11-11' },
-      { id: 'id-2', name: 'Bulachova Tatyana', phone: '222-22-22' },
-      
+      { id: 'id-1', name: 'Serhii Semenov', number: '111-11-11' },
+      { id: 'id-2', name: 'Bulachova Tatyana', number: '222-22-22' },
     ],
     filter: '',
   };
 
-  onFormSubmit = ({ name, phone }) => {
+  onFormSubmit = ({ name, number }) => {
     const nameToAdd = this.state.contacts.find(
-      contact => contact.name.toLowerCase() === name.toLowerCase(),
+      contact => contact.name.toLowerCase() === name.toLowerCase()
     );
     if (nameToAdd) {
       return alert(`${name} is already in contacts.`);
     }
 
-    this.setState( contacts  => ({
-      contacts: [{ id: nanoid(), name, phone }, ...contacts],
+    this.setState(prev => ({
+      contacts: [{ id: nanoid(), name, number }, ...prev.contacts],
     }));
   };
 
@@ -36,7 +37,9 @@ export default class App extends Component {
 
   registerLogic = () => {
     const { filter, contacts } = this.state;
-    return contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
   };
 
   deleteContacts = contactId => {
@@ -49,15 +52,22 @@ export default class App extends Component {
     const { filter } = this.state;
 
     return (
-    <>
+      
+      <AppContainer>
+      <GlobalStyle/>
+        <InputTitle>Phonebook</InputTitle>
         
-        <h2>Phonebook</h2>
         <ContactsForm onSubmit={this.onFormSubmit} />
 
-        <h2>Contacts</h2>
+        <InputTitle>Contacts</InputTitle>
         <ContactSearcher filter={filter} onChange={this.onChangeFilter} />
-        <ContactsList contacts={this.registerLogic()} deleteContacts={this.deleteContacts} />
-      </>
+        <ContactsList
+          contacts={this.registerLogic()}
+          deleteContacts={this.deleteContacts}
+        />
+        </AppContainer>
+      
+      
     );
   }
 }
