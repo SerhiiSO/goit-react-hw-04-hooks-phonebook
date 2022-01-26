@@ -39,7 +39,7 @@ export const SubmitBtnStyled = styled.button`
     color: white;
     padding: 5px 15px;
     border-radius: 10px;
-    transition: all 150ms linear;
+    transition: all n linear;
     :hover,
     :focus {
     background-color: inherit;
