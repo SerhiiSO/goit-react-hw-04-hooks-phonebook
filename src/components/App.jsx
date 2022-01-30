@@ -6,17 +6,27 @@ import ContactSearcher from './ContactSearcher/ContactSearcher';
 import ContactsList from './ContactList/ContactList';
 
 import GlobalStyle from './GlobalStyles/GlobalStyles';
-import {AppContainer, InputTitle} from './App.styled'
-import { FormStyled } from './Form/Form.styled';
+import { AppContainer, InputTitle } from './App.styled';
+
 export default class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Serhii Semenov', number: '111-11-11' },
-      { id: 'id-2', name: 'Bulachova Tatyana', number: '222-22-22' },
-    ],
+    contacts: [],
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts)
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  }
   onFormSubmit = ({ name, number }) => {
     const nameToAdd = this.state.contacts.find(
       contact => contact.name.toLowerCase() === name.toLowerCase()
@@ -52,11 +62,10 @@ export default class App extends Component {
     const { filter } = this.state;
 
     return (
-      
       <AppContainer>
-      <GlobalStyle/>
+        <GlobalStyle />
         <InputTitle>Phonebook</InputTitle>
-        
+
         <ContactsForm onSubmit={this.onFormSubmit} />
 
         <InputTitle>Contacts</InputTitle>
@@ -65,9 +74,7 @@ export default class App extends Component {
           contacts={this.registerLogic()}
           deleteContacts={this.deleteContacts}
         />
-        </AppContainer>
-      
-      
+      </AppContainer>
     );
   }
 }
